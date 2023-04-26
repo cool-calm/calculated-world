@@ -1,0 +1,40 @@
+---
+interface Props {
+  instance: WebAssembly.Instance;
+  memory: WebAssembly.Memory;
+}
+
+const { instance, memory } = Astro.props;
+
+const rewind = instance.exports.rewind as () => void;
+const next_body_chunk = instance.exports.next_body_chunk as () => number;
+
+const memoryBytes = new Uint8Array(memory.buffer);
+const utf8encoder = new TextEncoder();
+const utf8decoder = new TextDecoder();
+
+rewind();
+
+const chunks = [];
+//const chunks = new Uint8Array(1000);
+while (true) {
+  const ptr = next_body_chunk();
+  if (ptr === 0) {
+    break;
+  }
+
+  // Search for null-terminating byte.
+  const endPtr = memoryBytes.indexOf(0, ptr);
+  // Get subsection of memory between start and end, and decode it as UTF-8.
+  //return utf8decoder.decode(memoryBytes.subarray(ptr, endPtr));
+  //chunks.concat(memoryToRead.subarray(0, count));
+  chunks.push(memoryBytes.subarray(ptr, endPtr));
+  //chunks.set(memoryBytes.subarray(ptr, endPtr), chunks.length);
+}
+
+// There surely must be a better way to do this.
+// See: https://stackoverflow.com/questions/49129643/how-do-i-merge-an-array-of-uint8arrays
+const bytes = new Uint8Array(chunks.map(chunk => [...chunk]).flat());
+const html = utf8decoder.decode(bytes);
+---
+<Fragment set:html={html} />
