@@ -22,7 +22,7 @@ for (const [key, value] of Astro.url.searchParams) {
   if (key.startsWith("global.")) {
     const globalName = key.slice("global.".length);
     const global = instance.exports[globalName];
-    console.log(globalName, global)
+    console.log(globalName, global);
     if (global instanceof WebAssembly.Global) {
       if (value.startsWith("0x")) {
         global.value = parseInt(value, 16);
@@ -36,7 +36,12 @@ for (const [key, value] of Astro.url.searchParams) {
 let body = joinBodyChunks(instance.exports, memory);
 // We need the xmlns for it to render properly in browsers.
 if (!body.includes("http://www.w3.org/2000/svg")) {
-  body = body.replace(/^<svg/, `<svg xmlns="http://www.w3.org/2000/svg"`)
+  body = body.replace(/^<svg/, `<svg xmlns="http://www.w3.org/2000/svg"`);
 }
-return new Response(body, { headers: { "content-type": "image/svg+xml"}})
+return new Response(body, {
+  headers: {
+    "content-type": "image/svg+xml",
+    "cache-control": "s-maxage=604800, max-age=604800"
+  },
+});
 ---
