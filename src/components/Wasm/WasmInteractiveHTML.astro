@@ -10,6 +10,6 @@ interface Props {
 const { wasmURL, instance, memory } = Astro.props;
 ---
 <wasm-html data-url={wasmURL}>
-  <WasmHTML instance={instance} memory={memory} />
+<WasmHTML instance={instance} memory={memory} />
 </wasm-html>
 <script src="../../custom-elements/wasm-html.js"></script>
