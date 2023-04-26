@@ -1,0 +1,7 @@
+---
+const sha256 = Astro.params.sha256 as string;
+
+const url = `https://storage.googleapis.com/collected-public/sha256/application/wasm/${sha256}.wasm`;
+const res = await fetch(url);
+return new Response(res.body, { headers: { 'content-type': 'application/wasm' } });
+---

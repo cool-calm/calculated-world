@@ -1,0 +1,46 @@
+---
+const functionName = Astro.url.searchParams.get("func");
+const args = Astro.url.searchParams.getAll("param").map(parseFloat);
+const input = Astro.url.searchParams.get("input");
+
+const sha256 = Astro.params.sha256 as string;
+
+const url = `https://storage.googleapis.com/collected-public/sha256/application/wasm/${sha256}.wasm`;
+const res = await fetch(url);
+if (res.status >= 400) {
+  return new Response(`Status: ${res.status}`, {
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}
+
+const memory = new WebAssembly.Memory({ initial: 2 });
+const { instance } = await WebAssembly.instantiate(await res.arrayBuffer(), {
+  env: {
+    buffer: memory,
+  },
+});
+
+let written = 0;
+if (typeof input === "string") {
+  const inputOffset = (instance.exports.input_offset as WebAssembly.Global)
+    .value;
+
+  const memoryBytes = new Uint8Array(memory.buffer);
+  const memoryToWrite = memoryBytes.subarray(inputOffset);
+  const utf8encoder = new TextEncoder();
+  written = utf8encoder.encodeInto(input, memoryToWrite).written!;
+}
+
+let result = null;
+if (typeof functionName === "string") {
+  const func = instance.exports[functionName];
+  if (typeof func !== "function") {
+    throw Error(`Expected ${functionName} to be exported as a function.`);
+  }
+  result = func(...args);
+}
+---
+
+<div>Exports: {JSON.stringify(Object.keys(instance.exports))}</div>
+<div>Wrote {written} bytes</div>
+<div>Result: {result}</div>
