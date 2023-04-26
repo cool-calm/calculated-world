@@ -1,0 +1,15 @@
+---
+import WasmHTML from "./WasmHTML.astro";
+
+interface Props {
+  wasmURL: string;
+  instance: WebAssembly.Instance;
+  memory: WebAssembly.Memory;
+}
+
+const { wasmURL, instance, memory } = Astro.props;
+---
+<wasm-html data-url={wasmURL}>
+  <WasmHTML instance={instance} memory={memory} />
+</wasm-html>
+<script src="../../custom-elements/wasm-html.js"></script>

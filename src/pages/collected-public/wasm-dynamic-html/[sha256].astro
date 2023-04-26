@@ -1,0 +1,24 @@
+---
+import WasmInteractiveHTML from "../../../components/Wasm/WasmInteractiveHTML.astro";
+
+const sha256 = Astro.params.sha256 as string;
+
+const url = `https://storage.googleapis.com/collected-public/sha256/application/wasm/${sha256}.wasm`;
+const res = await fetch(url);
+if (res.status >= 400) {
+  return new Response(`Status: ${res.status}`, {
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}
+
+const memory = new WebAssembly.Memory({ initial: 2 });
+const { instance } = await WebAssembly.instantiate(await res.arrayBuffer(), {
+  env: {
+    buffer: memory,
+  },
+});
+
+const localURL = `/collected-public/wasm/${sha256}`;
+---
+<WasmInteractiveHTML wasmURL={localURL} instance={instance} memory={memory} />
+<noscript>You must use JavaScript to interact.</noscript>
