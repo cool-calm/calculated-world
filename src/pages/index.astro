@@ -1,14 +1,35 @@
 ---
+import { Code } from "astro/components";
+import { wasmInstantiate } from "../wasm/wasmInstantiate";
+import { joinBodyChunks } from "../wasm/wasmBodyChunks";
+
+const collectedPublicURL = new URL(
+  "https://storage.googleapis.com/collected-public/"
+);
+const baseWasmURL = new URL("sha256/application/wasm/", collectedPublicURL);
+const counterHTMLWasm = await wasmInstantiate(
+  new URL(
+    "a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1.wasm",
+    baseWasmURL
+  ).href
+);
+const counterHTML = joinBodyChunks(
+  counterHTMLWasm.instance.exports,
+  counterHTMLWasm.memory
+);
+
 const initialSVGGlobals = { color_hex: 0x22dd44ff };
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <title>Calculated.World</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Calculated.World</title>
+
+    <script src="../custom-elements/wasm-html.js"></script>
   </head>
   <body>
     <main class="prose lg:prose-xl max-w-2xl mx-auto px-3 pt-16 pb-16">
@@ -53,12 +74,28 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
       <hr />
 
       <h2>Static HTML</h2>
+      <template data-get-tailwind-to-generate-these-classes>
+        <output class="flex p-4 bg-gray-800">0</output>
+        <button
+          data-action="increment"
+          class="mt-4 inline-block py-1 px-4 bg-white text-black rounded"
+          >Increment</button
+        >
+      </template>
       <ul>
         <li>
           <a
             href="/collected-public/wasm-static-html/a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1"
             >Counter</a
           >
+          <p>
+            A {counterHTMLWasm.moduleByteLength} byte wasm module renders this initial
+            HTML on the server:
+          </p>
+          <div class="border-2 mt-4 pb-3 text-white">
+            <Fragment set:html={counterHTML} />
+          </div>
+          <Code code={counterHTML} lang="html" />
         </li>
       </ul>
       <h2>Dynamic HTML (click on things)</h2>
@@ -68,8 +105,29 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
             href="/collected-public/wasm-dynamic-html/a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1"
             >Interactive Counter</a
           >
+          <p>
+            The same {counterHTMLWasm.moduleByteLength} byte wasm module renders
+            initial HTML on the server, then the same wasm module is loaded by your browser where a <code>click</code> event listener is attached,
+            which calls the <code>increment()</code> function exported from wasm, changing its internal state and re-rendering the HTML. Click to see!
+          </p>
+          <div class="border-2 mt-4 pb-3 text-white">
+            <wasm-html
+              data-url="/collected-public/wasm/a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1"
+            >
+              <Fragment set:html={counterHTML} />
+            </wasm-html>
+          </div>
+          <Code
+            code={`<wasm-html data-url="/collected-public/wasm/a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1">\n` +
+              counterHTML.replaceAll(/^/gm, "  ") +
+              "\n</wasm-html>"}
+            lang="html"
+          />
         </li>
       </ul>
+
+	  <hr>
+
       <h2>SVG</h2>
       <a
         href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
@@ -111,12 +169,11 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
         <wasm-html
           data-url="/collected-public/wasm/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
           globals={JSON.stringify(initialSVGGlobals)}></wasm-html>
-        <script src="../custom-elements/wasm-html.js"></script>
         <legend class="mt-1 mb-1 font-medium"
           >Your color choice rendered in the browser</legend
         >
         <label for="global_color_hex">
-          Hex color (RGBA):
+          Edit the hex color (RGBA):
           <input
             name="color_hex"
             type="text"
@@ -158,10 +215,15 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
       </figure>
 
       <p>
-        This site you fine viewer are looking at is authored using Astro in server mode, uses Deno Deploy for edge
-        hosting, Google Cloud Storage to store .wasm files, and custom elements written in a handful of JavaScript.
+        This site you fine viewer are looking at is authored using Astro in
+        server mode, uses Deno Deploy for edge hosting, Google Cloud Storage to
+        store .wasm files, and custom elements written in a handful of
+        JavaScript.
       </p>
-	  <p>But this approach is tied to none of these. It could easily work as well in S3, Next.js running on Node.js.</p>
+      <p>
+        But this approach is tied to none of these. It could easily work as well
+        in S3, Next.js running on Node.js.
+      </p>
     </main>
 
     <footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
