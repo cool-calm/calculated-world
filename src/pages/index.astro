@@ -2,6 +2,9 @@
 import { Code } from "astro/components";
 import { wasmInstantiate } from "../wasm/wasmInstantiate";
 import { joinBodyChunks } from "../wasm/wasmBodyChunks";
+import { fixShikiDeno } from "../fix-shiki-deno";
+
+await fixShikiDeno();
 
 const collectedPublicURL = new URL(
   "https://storage.googleapis.com/collected-public/"
@@ -107,8 +110,10 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
           >
           <p>
             The same {counterHTMLWasm.moduleByteLength} byte wasm module renders
-            initial HTML on the server, then the same wasm module is loaded by your browser where a <code>click</code> event listener is attached,
-            which calls the <code>increment()</code> function exported from wasm, changing its internal state and re-rendering the HTML. Click to see!
+            initial HTML on the server, then the same wasm module is loaded by your
+            browser where a <code>click</code> event listener is attached, which
+            calls the <code>increment()</code> function exported from wasm, changing
+            its internal state and re-rendering the HTML. Click to see!
           </p>
           <div class="border-2 mt-4 pb-3 text-white">
             <wasm-html
@@ -126,7 +131,7 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
         </li>
       </ul>
 
-	  <hr>
+      <hr />
 
       <h2>SVG</h2>
       <a
