@@ -5,10 +5,15 @@ class WasmHTML extends HTMLElement {
         if (name === "globals") {
             const { exports, update } = await this.main;
             const newValues = new Map(Object.entries(JSON.parse(newValue)));
+            console.log(newValues)
 
-            for (const [key, stringValue] of newValues) {
-                if (typeof stringValue === "string") {
-                    const int = parseInt(stringValue);
+            for (const [key, value] of newValues) {
+                if (typeof value === "number") {
+                    exports[key].value = value;
+                }
+                else if (typeof value === "string") {
+                    const int = parseInt(value);
+                    console.log("set", key, int)
                     if (!Number.isNaN(int)) {
                         exports[key].value = int;
                     }
