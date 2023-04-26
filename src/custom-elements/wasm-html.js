@@ -91,6 +91,5 @@ function initWasmHTML(el, wasmInstancePromise, memory) {
 }
 
 customElements.define("wasm-html", WasmHTML);
-console.log("DEFINED")
 
 export const tagName = "wasm-html";
