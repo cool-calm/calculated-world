@@ -1,0 +1,26 @@
+---
+import { joinBodyChunks } from "../../../wasm/wasmBodyChunks";
+
+const sha256 = Astro.params.sha256 as string;
+
+const url = `https://storage.googleapis.com/collected-public/sha256/application/wasm/${sha256}.wasm`;
+const res = await fetch(url);
+if (res.status >= 400) {
+  return new Response(`Status: ${res.status}`, {
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}
+
+const memory = new WebAssembly.Memory({ initial: 2 });
+const { instance } = await WebAssembly.instantiate(await res.arrayBuffer(), {
+  env: {
+    buffer: memory,
+  },
+});
+let body = joinBodyChunks(instance.exports, memory);
+// We need the xmlns for it to render properly in browsers.
+if (!body.includes("http://www.w3.org/2000/svg")) {
+  body = body.replace(/^<svg/, `<svg xmlns="http://www.w3.org/2000/svg"`)
+}
+return new Response(body, { headers: { "content-type": "image/svg+xml"}})
+---
