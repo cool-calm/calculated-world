@@ -1,5 +1,5 @@
 ---
-const initialSVGGlobals = {color_hex: 0x22dd44ff};
+const initialSVGGlobals = { color_hex: 0x22dd44ff };
 ---
 
 <html lang="en">
@@ -15,7 +15,12 @@ const initialSVGGlobals = {color_hex: 0x22dd44ff};
       <h1 class="">
         <span class="text-sky-600">Calculated</span><span
           class="inline-block text-sky-400 animate-bounce"
-          >&VeryThinSpace;<span class="inline-block relative">.<span class="absolute top-0 left-0 font-black text-pink-400 animate-pulse">.</span></span>&VeryThinSpace;</span
+          >&VeryThinSpace;<span class="inline-block relative"
+            >.<span
+              class="absolute top-0 left-0 font-black text-pink-400 animate-pulse"
+              >.</span
+            ></span
+          >&VeryThinSpace;</span
         ><span class="text-pink-600">World</span>
       </h1>
       <p class="text-lg lg:text-2xl">
@@ -105,40 +110,67 @@ const initialSVGGlobals = {color_hex: 0x22dd44ff};
       <form name="svg-rect">
         <wasm-html
           data-url="/collected-public/wasm/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
-		  globals={JSON.stringify(initialSVGGlobals)}
-        ></wasm-html>
-		<script src="../custom-elements/wasm-html.js"></script>
-		<legend class="mt-1 mb-1 font-medium">Your color choice rendered in the browser</legend>
+          globals={JSON.stringify(initialSVGGlobals)}></wasm-html>
+        <script src="../custom-elements/wasm-html.js"></script>
+        <legend class="mt-1 mb-1 font-medium"
+          >Your color choice rendered in the browser</legend
+        >
         <label for="global_color_hex">
           Hex color (RGBA):
-          <input name="color_hex" type="text" id="global_color_hex" value="0x22dd44ff" />
+          <input
+            name="color_hex"
+            type="text"
+            id="global_color_hex"
+            value="0x22dd44ff"
+          />
         </label>
       </form>
       <script>
         const form = document.forms.namedItem("svg-rect")!;
-		const wasmHTMLEl = form.querySelector("wasm-html") as HTMLElement;
-		form.addEventListener("input", () => {
-		const values = new FormData(form);
-		const colorHex = parseInt(String(values.get("color_hex")));
-		if (Number.isNaN(colorHex)) {
-			return;
-		}
+        const wasmHTMLEl = form.querySelector("wasm-html") as HTMLElement;
+        form.addEventListener("input", () => {
+          const values = new FormData(form);
+          const colorHex = parseInt(String(values.get("color_hex")));
+          if (Number.isNaN(colorHex)) {
+            return;
+          }
 
-		wasmHTMLEl.setAttribute(
-			"globals",
-			JSON.stringify({ color_hex: colorHex })
-		);
-		});
+          wasmHTMLEl.setAttribute(
+            "globals",
+            JSON.stringify({ color_hex: colorHex })
+          );
+        });
       </script>
 
-	  <hr>
-	  
+      <hr />
+
+      <h2>How does it work?</h2>
+      <figure>
+        <img src="/architecture.png" alt="" />
+        <figcaption>
+          Rendering HTML on the edge and in the browser. It starts from an
+          object store (like S3) holding an example abc.wasm file, loaded by the
+          edge server which renders the initial HTML sent to the user’s browser,
+          which then loads an instance of the same abc.wasm, adds event handlers
+          which are forwarded to the wasm instance, and then re-renders the
+          HTML.
+        </figcaption>
+      </figure>
+
+      <p>
+        This site you fine viewer are looking at is authored using Astro in server mode, uses Deno Deploy for edge
+        hosting, Google Cloud Storage to store .wasm files, and custom elements written in a handful of JavaScript.
+      </p>
+	  <p>But this approach is tied to none of these. It could easily work as well in S3, Next.js running on Node.js.</p>
     </main>
+
     <footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
       <p>© 2023 Royal Icing Pty Ltd</p>
       <p>
         <a href="https://github.com/cool-calm/calculated-world"
-          >View source on GitHub</a>
+          >View source on GitHub</a
+        >
       </p>
     </footer>
-  
+  </body>
+</html>
