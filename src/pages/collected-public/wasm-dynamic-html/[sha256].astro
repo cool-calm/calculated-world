@@ -21,4 +21,4 @@ const { instance } = await WebAssembly.instantiate(await res.arrayBuffer(), {
 const localURL = `/collected-public/wasm/${sha256}`;
 ---
 <WasmInteractiveHTML wasmURL={localURL} instance={instance} memory={memory} />
-<noscript>You must use JavaScript to interact.</noscript>
+<noscript>You need JavaScript to interact.</noscript>
