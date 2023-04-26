@@ -17,6 +17,22 @@ const { instance } = await WebAssembly.instantiate(await res.arrayBuffer(), {
     buffer: memory,
   },
 });
+
+for (const [key, value] of Astro.url.searchParams) {
+  if (key.startsWith("global.")) {
+    const globalName = key.slice("global.".length);
+    const global = instance.exports[globalName];
+    console.log(globalName, global)
+    if (global instanceof WebAssembly.Global) {
+      if (value.startsWith("0x")) {
+        global.value = parseInt(value, 16);
+      } else {
+        global.value = parseInt(value);
+      }
+    }
+  }
+}
+
 let body = joinBodyChunks(instance.exports, memory);
 // We need the xmlns for it to render properly in browsers.
 if (!body.includes("http://www.w3.org/2000/svg")) {
