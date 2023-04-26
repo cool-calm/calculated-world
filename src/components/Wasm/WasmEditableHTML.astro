@@ -1,0 +1,35 @@
+---
+import WasmHTML from "./WasmHTML.astro";
+
+interface Props {
+  wasmURL: string;
+  editableGlobals: ReadonlyArray<string>;
+  instance: WebAssembly.Instance;
+  memory: WebAssembly.Memory;
+}
+
+const { wasmURL, instance, memory } = Astro.props;
+---
+<form data-wasm-editable-html>
+<wasm-html data-url={wasmURL}>
+<WasmHTML instance={instance} memory={memory} />
+</wasm-html>
+<label for="global.color_hex">
+  Color hex:
+  <input name="color_hex" type="text" id="global.color_hex" value="0x2299ee77">
+</label>
+</form>
+<script src="../../custom-elements/wasm-html.js"></script>
+
+<script>
+  const forms = document.querySelectorAll('form[data-wasm-editable-html]') as NodeListOf<HTMLFormElement>;
+
+  // Handle clicks on each button.
+  forms.forEach((form) => {
+    const wasmHTMLEl = form.querySelector('wasm-html') as HTMLElement;
+    form.addEventListener('input', () => {
+      const values = new FormData(form);
+      wasmHTMLEl.setAttribute("globals", JSON.stringify(Object.fromEntries(values)));
+    });
+  });
+</script>

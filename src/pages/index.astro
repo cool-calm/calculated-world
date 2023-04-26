@@ -1,4 +1,5 @@
 ---
+import WasmEditableHTML from "../components/Wasm/WasmEditableHTML.astro";
 ---
 
 <html lang="en">
@@ -11,16 +12,42 @@
   </head>
   <body>
     <main class="prose lg:prose-xl max-w-2xl mx-auto px-3 pt-16 pb-16">
-      <h1 class=""><span class="text-sky-600">Calculated</span><span class="text-yellow-400 animate-pulse">&VeryThinSpace;·&VeryThinSpace;</span><span class="text-pink-600">World</span></h1>
-	  <p class="text-lg lg:text-2xl">The exact same WebAssembly downloaded to run at the <span class="text-sky-600">edge</span> <em>and</em> in the <span class="text-pink-600">browser</span>. Made by <a href="https://icing.space/">Patrick Smith</a>.</p>
-	  <p>For decades CDNs have reliably served static content close to users. It would be great if they could run code, and that’s what the edge brings.</p>
-	  <!--<p>But deploying to the cloud requires understanding writing code and knowing, well, how to deploy.</p>-->
-	  <p>But wouldn’t it be great if adding new code was as easy as uploading an image? Sounds like a security hole waiting to go wrong right? <strong>WebAssembly</strong> allows code to be run safely in a sandbox. And the same WebAssembly can run on a server, in a browser, or even on device like a phone.</p>
-	  <p>The dream of universal code doesn’t have to be only by using JavaScript. We can have a new standard library, one that runs in every popular programming language, that is consistent across all environments and *-ends, and can be streamed on demand.</p>
-     
-	  <hr>
-	 
-	  <h2>Static HTML</h2>
+      <h1 class="">
+        <span class="text-sky-600">Calculated</span><span
+          class="text-yellow-400 animate-pulse"
+          >&VeryThinSpace;·&VeryThinSpace;</span
+        ><span class="text-pink-600">World</span>
+      </h1>
+      <p class="text-lg lg:text-2xl">
+        The exact same WebAssembly downloaded to run at the <span
+          class="text-sky-600">edge</span
+        >
+        <em>and</em> in the <span class="text-pink-600">browser</span>. Made by <a
+          href="https://icing.space/">Patrick Smith</a
+        >.
+      </p>
+      <p>
+        For decades CDNs have reliably served static content close to users. It
+        would be great if they could run code, and that’s what the edge brings.
+      </p>
+      <!--<p>But deploying to the cloud requires understanding writing code and knowing, well, how to deploy.</p>-->
+      <p>
+        But wouldn’t it be great if adding new code was as easy as uploading an
+        image? Sounds like a security hole waiting to go wrong right? <strong
+          >WebAssembly</strong
+        > allows code to be run safely in a sandbox. And the same WebAssembly can
+        run on a server, in a browser, or even on device like a phone.
+      </p>
+      <p>
+        The dream of universal code doesn’t have to be only by using JavaScript.
+        We can have a new standard library, one that runs in every popular
+        programming language, that is consistent across all environments and
+        *-ends, and can be streamed on demand.
+      </p>
+
+      <hr />
+
+      <h2>Static HTML</h2>
       <ul>
         <li>
           <a
@@ -40,53 +67,83 @@
       </ul>
       <h2>SVG</h2>
       <a
-        href="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411"
+        href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
+        class="block hover:bg-sky-100"
       >
         <figure>
           <img
-            src="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411"
+            src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
             alt="Black Square"
           />
           <figcaption>Black Square</figcaption>
         </figure>
       </a>
       <a
-        href="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411?global.color_hex=0xdd7711ff"
+        href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0xdd7711ff"
+        class="block hover:bg-sky-100"
       >
         <figure>
           <img
-            src="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411?global.color_hex=0xdd7711ff"
+            src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0xdd7711ff"
             alt="Black Square"
           />
           <figcaption>Orange Square</figcaption>
         </figure>
       </a>
       <a
-        href="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411?global.color_hex=0x2299eeff"
+        href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299eeff"
+        class="block hover:bg-sky-100"
       >
         <figure>
           <img
-            src="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411?global.color_hex=0x2299eeff"
+            src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299eeff"
             alt="Black Square"
           />
           <figcaption>Blue Square</figcaption>
         </figure>
       </a>
       <a
-        href="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411?global.color_hex=0x2299ee77"
+        href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299ee77"
+        class="block hover:bg-sky-100"
       >
         <figure>
           <img
-            src="/collected-public/wasm-svg/4c3bed07c4ddd09af4726406fe17f82c69c0408f0a4a207c1e7485164b846411?global.color_hex=0x2299ee77"
+            src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299ee77"
             alt="Black Square"
           />
           <figcaption>Transparent Blue Square</figcaption>
         </figure>
       </a>
+      <form name="svg-rect">
+        <wasm-html
+          data-url="/collected-public/wasm/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
+		  globals='{"color_hex": 255}'
+        ></wasm-html>
+		<script src="../custom-elements/wasm-html.js"></script>
+        <label for="global_color_hex">
+          Color hex:
+          <input name="color_hex" type="text" id="global_color_hex" value="0x2299ee77" />
+        </label>
+      </form>
+      <script>
+        const form = document.forms.namedItem("svg-rect")!;
+		const wasmHTMLEl = form.querySelector("wasm-html") as HTMLElement;
+		form.addEventListener("input", () => {
+		const values = new FormData(form);
+		console.log("form values", JSON.stringify(Object.fromEntries(values)))
+		wasmHTMLEl.setAttribute(
+			"globals",
+			JSON.stringify(Object.fromEntries(values))
+		);
+		});
+      </script>
     </main>
-	<footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
-		<p>© 2023 Royal Icing Pty Ltd</p>
-		<p><a href="https://github.com/cool-calm/calculated-world">View source on GitHub</a></p>
-	</footer>
+    <footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
+      <p>© 2023 Royal Icing Pty Ltd</p>
+      <p>
+        <a href="https://github.com/cool-calm/calculated-world"
+          >View source on GitHub</a>
+      </p>
+    </footer>
   </body>
 </html>
