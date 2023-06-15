@@ -123,6 +123,8 @@ async function initWasmHTML(el, makeInstancePromise) {
 
     queueMicrotask(update);
 
+    el.dataset.ready = "";
+
     return { exports: instance.exports, update };
 }
 
