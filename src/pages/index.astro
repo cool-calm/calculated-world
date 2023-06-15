@@ -48,30 +48,32 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
         ><span class="text-pink-600">World</span>
       </h1>
       <p class="text-lg lg:text-2xl">
-        The exact same WebAssembly downloaded on-demand running at the <span
+        The exact same WebAssembly downloaded lazily running at the <span
           class="text-sky-600">edge</span
         >
-        <em>and</em> in the <span class="text-pink-600">browser</span>. Made by <a
-          href="https://icing.space/">Patrick Smith</a
-        >.
+        <em>and</em> in the <span class="text-pink-600">browser</span>. A
+        project by <a href="https://icing.space/">Patrick Smith</a>.
       </p>
       <p>
-        For decades CDNs have reliably served static content close to users. It
-        would be great if they could run code, and that’s what the edge brings.
+        For decades CDNs have reliably served static content <strong
+          >close to users</strong
+        >. And now the <strong>edge</strong> brings the ability to run code close
+        to users too. But wouldn’t it be great if adding new code was as easy as
+        uploading an image? Sounds like a security hole waiting to be exploited right?
       </p>
       <!--<p>But deploying to the cloud requires understanding writing code and knowing, well, how to deploy.</p>-->
       <p>
-        But wouldn’t it be great if adding new code was as easy as uploading an
-        image? Sounds like a security hole waiting to go wrong right? <strong
-          >WebAssembly</strong
-        > allows code to be run safely in a sandbox. And the same WebAssembly can
-        run on a server, in a browser, or even on device like a phone.
+        <strong>WebAssembly</strong> allows code to be run <strong
+          >safely in a sandbox</strong
+        >. And the same WebAssembly can run on a server, in a browser, or even
+        directly on-device like your <strong>phone</strong>.
       </p>
       <p>
-        The dream of universal code doesn’t have to be only by using JavaScript.
-        We can have a new cloud-first standard library, one that runs in every popular
-        programming language, that is consistent across all environments and
-        *-ends, and can be downloaded on demand.
+        The dream of <strong>universal code</strong> doesn’t have to be only by using
+        JavaScript. We can have a new cloud-first standard library, one that runs
+        in <strong>every popular programming language</strong>, that is <strong
+          >consistent</strong
+        > across all environments and front/back-ends, and can be downloaded on-demand.
       </p>
 
       <hr />
@@ -93,7 +95,8 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
           >
           <p>
             A {counterHTMLWasm.moduleByteLength} byte wasm module renders this initial
-            HTML on the server:
+            HTML on the server. Unfortunately it’s not interactive — see the next
+            section!
           </p>
           <div class="border-2 mt-4 pb-3 text-white">
             <Fragment set:html={counterHTML} />
@@ -111,9 +114,9 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
           <p>
             The same {counterHTMLWasm.moduleByteLength} byte wasm module renders
             initial HTML on the server, then the same wasm module is loaded by your
-            browser where a <code>click</code> event listener is attached, which
-            calls the <code>increment()</code> function exported from wasm, changing
-            its internal state and re-rendering the HTML. Click to see!
+            browser where event listeners are attached, which call functions exported
+            from wasm, changing its internal state and re-rendering the HTML. Click
+            <strong>Increment</strong> to see!
           </p>
           <div class="border-2 mt-4 pb-3 text-white">
             <wasm-html
@@ -122,12 +125,33 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
               <Fragment set:html={counterHTML} />
             </wasm-html>
           </div>
+          <p>
+            Below is the initial HTML rendered by the server. The outer <code
+              >{"<wasm-html>"}</code
+            >
+            <strong>custom element</strong> is run in the browser, loading the wasm
+            URL at <code>src</code>. The inner HTML is the output of running the
+            wasm module on the server, providing the initial HTML.
+          </p>
           <Code
             code={`<wasm-html src="/collected-public/wasm/a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1">\n` +
               counterHTML.replaceAll(/^/gm, "  ") +
               "\n</wasm-html>"}
             lang="html"
           />
+          <p>
+            <strong>Event delegation</strong> is used to automatically wire up the
+            button’s click to call the <code>exports.increment()</code> function
+            exported from WebAssembly. How does it know which exported function to
+            call? See the <code>data-action="increment"</code>? That declares
+            the exported function’s name to find.
+          </p>
+          <p>
+            So we have a single WebAssembly module, running in two places
+            (server and browser), able to generate the initial HTML and the
+            updated HTML after interactions. And the interactions are handled by
+            what was declared in that initial HTML — it’s all self-contained.
+          </p>
         </li>
       </ul>
 
@@ -211,23 +235,30 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
         <img src="/architecture.png" alt="" />
         <figcaption>
           Rendering HTML on the edge and in the browser. It starts from an
-          object store (like S3) holding an example abc.wasm file, loaded by the
-          edge server which renders the initial HTML sent to the user’s browser,
-          which then loads an instance of the same abc.wasm, adds event handlers
-          which are forwarded to the wasm instance, and then re-renders the
-          HTML.
+          object store (like S3 or GCP Storage) holding an example <code
+            >abc.wasm</code
+          > file, loaded by the edge server which renders the initial HTML sent to
+          the user’s browser, which then loads an instance of the same <code
+            >abc.wasm</code
+          >, and adds event handlers which are forwarded to the wasm instance,
+          re-rendering the HTML.
         </figcaption>
       </figure>
 
       <p>
-        This site you fine viewer are looking at is authored using Astro in
-        server mode, uses Deno Deploy for edge hosting, Google Cloud Storage to
-        store .wasm files, and custom elements written in a handful of
-        JavaScript.
+        This site you fine viewer are looking at is authored using <a
+          href="https://astro.build">Astro</a
+        > in server mode, uses <a href="https://deno.com/deploy">Deno Deploy</a>
+        for edge hosting, <a href="https://cloud.google.com/storage"
+          >Google Cloud Storage</a
+        > to store .wasm files, and <a
+          href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements"
+          >custom HTML elements</a
+        > written with a handful of JavaScript.
       </p>
       <p>
         But this approach is tied to none of these. It could easily work as well
-        in S3, Next.js running on Node.js.
+        with S3 plus Next.js running on Node.js.
       </p>
     </main>
 
