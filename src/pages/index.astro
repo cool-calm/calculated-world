@@ -150,7 +150,9 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
             So we have a single WebAssembly module, running in two places
             (server and browser), able to generate the initial HTML and the
             updated HTML after interactions. And the interactions are handled by
-            what was declared in that initial HTML — <strong>it’s all self-contained</strong>.
+            what was declared in that initial HTML — <strong
+              >it’s all self-contained</strong
+            >.
           </p>
         </li>
       </ul>
@@ -162,47 +164,63 @@ const initialSVGGlobals = { color_hex: 0x22dd44ff };
         href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
         class="block hover:bg-sky-100"
       >
-        <figure>
+        <figure class="text-center">
           <img
             src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
             alt="Black Square"
+            class="block mx-auto"
           />
-          <figcaption>Black Square rendered at the edge</figcaption>
+          <figcaption>Black square rendered at the edge</figcaption>
         </figure>
       </a>
-      <a
-        href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299eeff"
-        class="block hover:bg-sky-100"
-      >
-        <figure>
-          <img
-            src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299eeff"
-            alt="Black Square"
-          />
-          <figcaption>Blue Square rendered at the end</figcaption>
-        </figure>
-      </a>
+      <details>
+        <summary class="text-center text-base">View HTML</summary>
+        <Code
+          code={`
+<img
+  src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
+  alt="Black Square"
+/>`.trim()}
+          lang="html"
+          wrap
+        />
+      </details>
       <a
         href="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299ee77"
         class="block hover:bg-sky-100"
       >
-        <figure>
+        <figure class="text-center">
           <img
             src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299ee77"
-            alt="Black Square"
+            alt="Blue Square"
+            class="block mx-auto"
           />
           <figcaption>Transparent Blue Square rendered at the edge</figcaption>
         </figure>
       </a>
-      <form name="svg-rect">
+      <details>
+        <summary class="text-center text-base">View HTML</summary>
+        <Code
+          code={`
+<img
+  src="/collected-public/wasm-svg/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20?global.color_hex=0x2299ee77"
+  alt="Blue Square"
+/>`.trim()}
+          lang="html"
+          wrap
+        />
+      </details>
+      <form name="svg-rect" class="mt-16 text-center flex flex-col">
         <wasm-html
           src="/collected-public/wasm/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
-          globals={JSON.stringify(initialSVGGlobals)}></wasm-html>
-        <legend class="mt-1 mb-1 font-medium"
+          globals={JSON.stringify(initialSVGGlobals)}
+          class="flex justify-center"
+          ></wasm-html>
+        <legend class="mt-1 mb-1 font-medium text-center mx-auto"
           >Your color choice rendered in the browser</legend
         >
         <label for="global_color_hex">
-          Edit hex color (RGBA):
+          Edit RGBA hex color:
           <input
             name="color_hex"
             type="text"
