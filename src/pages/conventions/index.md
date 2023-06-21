@@ -13,7 +13,7 @@ String are nul-terminated UTF-8.
 An example of a constant data string in WebAssembly text format:
 
 ```wasm
-(data $html_doctype "<!doctype html>\0")
+(data $html_doctype "<!doctype html>\00")
 ```
 
 ## HTML Component (chunked)
