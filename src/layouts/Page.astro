@@ -1,0 +1,30 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { fixShikiDeno } from "../fix-shiki-deno";
+
+await fixShikiDeno();
+
+const { title } = Astro.props
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  </head>
+  <body>
+    <main class="prose lg:prose-xl max-w-2xl mx-auto px-3 pt-16 pb-16">
+      <slot />
+    </main>
+
+    <footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
+      <p>© 2023 Royal Icing Pty Ltd</p>
+      <p>
+        <a href="https://github.com/cool-calm/calculated-world"
+          >View source on GitHub</a
+        >
+      </p>
+    </footer>
+  </body>
+</html>
