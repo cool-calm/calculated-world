@@ -19,10 +19,10 @@ An example of a constant data string in WebAssembly text format:
 ## HTML Component (chunked)
 
 ```wasm
-(data $html_mimetype "text/html\0")
+(data (i32.const 0x1024) "text/html\00")
 
 (func (export "media_type") (result i32)
-    (global_get $html_mimetype)
+    (i32.const 0x1024)
 )
 
 (func (export "next_body_chunk") (result i32)
