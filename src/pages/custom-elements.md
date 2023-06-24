@@ -1,4 +1,9 @@
-# Use in the browser
+---
+layout: ../layouts/Page.astro
+title: WebAssembly HTML Custom Elements
+---
+
+# WebAssembly HTML Custom Elements
 
 ### `<wasm-html>` custom element
 

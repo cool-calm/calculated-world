@@ -1,4 +1,9 @@
-# How do you use WebAssembly modules?
+---
+layout: ../layouts/Page.astro
+title: How to run WebAssembly modules
+---
+
+# How to run WebAssembly modules
 
 ## Browser
 

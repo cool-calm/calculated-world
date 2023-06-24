@@ -1,3 +1,8 @@
+---
+layout: ../layouts/Page.astro
+title: Hosting Dynamic WebAssembly
+---
+
 # Hosting Dynamic WebAssembly
 
 You need two pieces:
