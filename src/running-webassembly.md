@@ -24,7 +24,7 @@ console.log(answer); // 81
 
 Deno is what I host [this site](/) using.
 
-## JavaScript Edge: Vercel, Cloudflare Workers
+## Next.js Edge
 
 In Next.js you [import then instantiate the wasm module](https://nextjs.org/docs/messages/middleware-dynamic-wasm-compilation) like so:
 
@@ -51,6 +51,14 @@ WebAssembly.instantiate(wasmBytes).then(({ instance }) => {
 });
 ```
 
-## Rust, .NET, Elixir, Ruby, C
+## Rust
+
+- Wasmtime
+
+## Golang
+
+- https://github.com/tetratelabs/wazero
+
+## .NET, Elixir, Ruby, C
 
 For other languages Wasmtime is well-supported library for [many languages](https://docs.wasmtime.dev/lang.html).
