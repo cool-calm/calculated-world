@@ -16,7 +16,7 @@ A deploy is simply an upload to your object store.
 
 I recommend calculating a SHA256 digest of the WebAssembly module and using that as its object store key.
 
-e.g. `application/wasm/21ad2693870da89b201f445f75c6e3dac7b04ff91984d5ba17711857310939f9.wasm`
+e.g. `application/wasm/388b/sha256-21ad2693870da89b201f445f75c6e3dac7b04ff91984d5ba17711857310939f9.wasm`
 
 That way if you deploy a module that already exists, it can be skipped.
 
@@ -25,6 +25,24 @@ You’d then store the object’s key say in a database. On fetch, you’d look 
 ## Deno Deploy
 
 You can import WebAssembly modules dynamically: fetch and then compile the module.
+
+```js
+const sha256 = … // e.g. read from ENV variable or database or URL
+
+const url = `https://storage.googleapis.com/collected-public/sha256/application/wasm/${sha256}.wasm`;
+const res = await fetch(url);
+if (res.status >= 400) {
+  return new Response(`Status: ${res.status}`, {
+	headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}
+
+const imports = {};
+const { instance } = await WebAssembly.instantiate(await res.arrayBuffer(), imports);
+const memory = instance.exports.memory;
+
+// Call exported functions…
+```
 
 ## Vercel
 
