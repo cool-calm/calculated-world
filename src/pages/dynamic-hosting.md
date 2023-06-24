@@ -7,10 +7,10 @@ title: Hosting Dynamic WebAssembly
 
 You need two pieces:
 
-1. An object store like AWS S3, Google Cloud Storage, or Cloudflare R1.
-2. A cloud server.
+1. An object store like AWS S3, Google Cloud Storage, or Cloudflare R1. Here you upload each `.wasm` module immutably using its digest as the key.
+2. A cloud server which supports dynamic instantiation of WebAssembly modules.
 
-## Deploying WebAssembly modules
+## Immutable deploys
 
 A deploy is simply an upload to your object store.
 
@@ -18,9 +18,7 @@ I recommend calculating a SHA256 digest of the WebAssembly module and using that
 
 e.g. `application/wasm/388b/sha256-21ad2693870da89b201f445f75c6e3dac7b04ff91984d5ba17711857310939f9.wasm`
 
-That way if you deploy a module that already exists, it can be skipped.
-
-You’d then store the object’s key say in a database. On fetch, you’d look up the key, fetch the `.wasm` file for that key, and then execute it.
+That way if you deploy a module that already exists, it can be skipped. And every previous deploy has its WebAssembly kept around, which is great for rollbacks, preview deploys, and speeding up future deploys via reuse.
 
 Here’s how you’d generate this key using JavaScript from a WebAssembly module’s byte array:
 
@@ -31,6 +29,12 @@ function calculateWasmKey(wasmModuleBytes: ArrayBuffer) {
 	return `application/wasm/${wasmModuleBytes.byteLength}b/sha256-${sha256Hex}.wasm`;
 }
 ```
+
+You’d then store the object’s key say in a database. On fetch, you’d look up the key, fetch the `.wasm` file for that key, and then execute it.
+
+Examples (coming soon) are provided which do this for you.
+
+----
 
 ## Deno Deploy
 
