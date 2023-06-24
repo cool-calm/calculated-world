@@ -22,14 +22,24 @@ That way if you deploy a module that already exists, it can be skipped.
 
 You’d then store the object’s key say in a database. On fetch, you’d look up the key, fetch the `.wasm` file for that key, and then execute it.
 
+Here’s how you’d generate this key using JavaScript from a WebAssembly module’s byte array:
+
+```ts
+function calculateWasmKey(wasmModuleBytes: ArrayBuffer) {
+	const sha256 = await crypto.subtle.digest("SHA-256", wasmModuleBytes);
+	const sha256Hex = sha256.map((b) => b.toString(16).padStart(2, "0")).join("");
+	return `application/wasm/${wasmModuleBytes.byteLength}b/sha256-${sha256Hex}.wasm`;
+}
+```
+
 ## Deno Deploy
 
 You can import WebAssembly modules dynamically: fetch and then compile the module.
 
 ```js
-const sha256 = … // e.g. read from ENV variable or database or URL
+const wasmObjectKey = … // e.g. read from ENV variable or database or URL
 
-const url = `https://storage.googleapis.com/collected-public/sha256/application/wasm/${sha256}.wasm`;
+const url = `https://storage.googleapis.com/your-bucket-name/${wasmObjectKey}`;
 const res = await fetch(url);
 if (res.status >= 400) {
   return new Response(`Status: ${res.status}`, {
