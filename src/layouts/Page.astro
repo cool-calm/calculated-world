@@ -1,5 +1,6 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
+// import BaseHead from '../components/BaseHead.astro';
+import PrimaryNavList from '../components/PrimaryNavList.astro';
 import { fixShikiDeno } from "../fix-shiki-deno";
 
 await fixShikiDeno();
@@ -16,11 +17,17 @@ const { title } = Astro.props
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>
-    <main class="prose lg:prose-xl max-w-2xl mx-auto px-3 pt-16 pb-16">
-      <slot />
-    </main>
+    <div class="flex flex-col lg:flex-row">
+      <nav class="sticky p-3 lg:p-16 lg:pr-8 lg:max-w-max text-center lg:text-start lg:text-xl/9 border-b lg:border-b-0">
+        <div class="font-extrabold tracking-wide">Calculated.World</div>
+        <PrimaryNavList />
+      </nav>
+      <main class="prose lg:prose-xl max-w-3xl mx-auto px-3 pt-16 pb-16">
+        <slot />
+      </main>
+    </div>
 
-    <footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
+    <footer role="contentinfo" class="prose max-w-3xl mx-auto lg:mx-16 px-3 pt-16 pb-16">
       <p>© 2023 Royal Icing Pty Ltd</p>
       <p>
         <a href="https://github.com/cool-calm/calculated-world"

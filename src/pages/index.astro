@@ -1,5 +1,6 @@
 ---
 import { Code } from "astro/components";
+import PrimaryNavList from '../components/PrimaryNavList.astro';
 import { wasmInstantiate } from "../wasm/wasmInstantiate";
 import { joinBodyChunks } from "../wasm/wasmBodyChunks";
 import { fixShikiDeno } from "../fix-shiki-deno";
@@ -54,6 +55,7 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
         <em>and</em> in the <span class="text-pink-600">browser</span>. A
         project by <a href="https://icing.space/">Patrick Smith</a>.
       </p>
+      <hr>
       <p>
         For decades CDNs have reliably served static content <strong
           >close to users</strong
@@ -281,6 +283,10 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
     </main>
 
     <footer role="contentinfo" class="prose max-w-2xl mx-auto px-3 pt-16 pb-16">
+      <nav>
+        <PrimaryNavList />
+      </nav>
+      <hr>
       <p>© 2023 Royal Icing Pty Ltd</p>
       <p>
         <a href="https://github.com/cool-calm/calculated-world"
