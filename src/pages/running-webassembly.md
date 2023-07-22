@@ -56,6 +56,10 @@ WebAssembly.instantiate(wasmBytes).then(({ instance }) => {
 });
 ```
 
+## Elixir
+
+- `orb_wasmtime` or `wasmtime_ex`
+
 ## Rust
 
 - Wasmtime
