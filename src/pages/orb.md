@@ -39,4 +39,5 @@ Wasmtime.call(a, :insert, 5)
 Wasmtime.call(a, :insert, 6)
 Wasmtime.call(a, :insert, 7)
 Wasmtime.call(a, :calculate_mean)
+# 5
 ```
