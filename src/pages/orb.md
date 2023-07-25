@@ -32,12 +32,12 @@ end
 ```elixir
 alias OrbWasmtime.Instance, as: Wasmtime
 
-a = Wasmtime.run(Mean)
-Wasmtime.call(a, :insert, 3)
-Wasmtime.call(a, :insert, 4)
-Wasmtime.call(a, :insert, 5)
-Wasmtime.call(a, :insert, 6)
-Wasmtime.call(a, :insert, 7)
-Wasmtime.call(a, :calculate_mean)
+wid = Wasmtime.run(Mean)
+Wasmtime.call(wid, :insert, 3)
+Wasmtime.call(wid, :insert, 4)
+Wasmtime.call(wid, :insert, 5)
+Wasmtime.call(wid, :insert, 6)
+Wasmtime.call(wid, :insert, 7)
+Wasmtime.call(wid, :calculate_mean)
 # 5
 ```
