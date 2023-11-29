@@ -3,9 +3,9 @@ import { Code } from "astro/components";
 import PrimaryNavList from '../components/PrimaryNavList.astro';
 import { wasmInstantiate } from "../wasm/wasmInstantiate";
 import { joinBodyChunks } from "../wasm/wasmBodyChunks";
-import { fixShikiDeno } from "../fix-shiki-deno";
+// import { fixShikiDeno } from "../fix-shiki-deno";
 
-await fixShikiDeno();
+// await fixShikiDeno();
 
 const collectedPublicURL = new URL(
   "https://storage.googleapis.com/collected-public/"

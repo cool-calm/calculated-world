@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, passthroughImageService } from 'astro/config';
 import mdx from "@astrojs/mdx";
 import deno from '@astrojs/deno';
 
@@ -11,5 +11,8 @@ export default defineConfig({
   server: {
     port: 5888
   },
-  integrations: [mdx(), tailwind()]
+  integrations: [mdx(), tailwind()],
+  image: {
+    service: passthroughImageService()
+  }
 });
