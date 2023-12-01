@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && cp import_map.json dist/",
     "preview": "astro preview",
     "astro": "astro",
     "deno-run": "astro build && deno run -A dist/server/entry.mjs",
