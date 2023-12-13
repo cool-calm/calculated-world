@@ -1,6 +1,12 @@
 ---
-import { Code } from "astro/components";
-import PrimaryNavList from '../components/PrimaryNavList.astro';
+// Object.assign(globalThis.process, {
+//   cwd() {
+//     return "/dev/null";
+//   },
+// });
+// import { Code } from "astro/components";
+import Code from "../components/Code.astro";
+import PrimaryNavList from "../components/PrimaryNavList.astro";
 import { wasmInstantiate } from "../wasm/wasmInstantiate";
 import { joinBodyChunks } from "../wasm/wasmBodyChunks";
 // import { fixShikiDeno } from "../fix-shiki-deno";
@@ -27,7 +33,7 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
 
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Calculated.World</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
@@ -55,13 +61,14 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
         <em>and</em> in the <span class="text-pink-600">browser</span>. A
         project by <a href="https://icing.space/">Patrick Smith</a>.
       </p>
-      <hr>
+      <hr />
       <p>
         For decades CDNs have reliably served static content <strong
           >close to users</strong
-        >. And now the <strong>edge</strong> brings the ability to run code close
-        to users too. But wouldn’t it be great if adding new code was as easy as
-        uploading an image? Sounds like a security hole waiting to be exploited right?
+        >. And now the <strong>edge</strong> brings the ability to run code
+        close to users too. But wouldn’t it be great if adding new code was as
+        easy as uploading an image? Sounds like a security hole waiting to be
+        exploited right?
       </p>
       <!--<p>But deploying to the cloud requires understanding writing code and knowing, well, how to deploy.</p>-->
       <p>
@@ -71,11 +78,11 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
         directly on-device like your <strong>phone</strong>.
       </p>
       <p>
-        The dream of <strong>universal code</strong> doesn’t have to be only by using
-        JavaScript. We can have a new cloud-first ecosystem of libraries, ones that run
-        in <strong>every popular programming language</strong>, that are <strong
-          >consistent</strong
-        > across all environments and front/back-ends, and can be downloaded on-demand from a simple URL.
+        The dream of <strong>universal code</strong> doesn’t have to be only by
+        using JavaScript. We can have a new cloud-first ecosystem of libraries,
+        ones that run in <strong>every popular programming language</strong>,
+        that are <strong>consistent</strong> across all environments and
+        front/back-ends, and can be downloaded on-demand from a simple URL.
       </p>
 
       <hr />
@@ -96,9 +103,9 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
             >Counter</a
           >
           <p>
-            A {counterHTMLWasm.moduleByteLength} byte wasm module renders this initial
-            HTML on the server. Unfortunately it’s not interactive — see the next
-            section!
+            A {counterHTMLWasm.moduleByteLength} byte wasm module renders this
+            initial HTML on the server. Unfortunately it’s not interactive — see
+            the next section!
           </p>
           <div class="border-2 mt-4 pb-3 text-white">
             <Fragment set:html={counterHTML} />
@@ -115,9 +122,10 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
           >
           <p>
             The same {counterHTMLWasm.moduleByteLength} byte wasm module renders
-            initial HTML on the server, then the same wasm module is loaded by your
-            browser where event listeners are attached, which call functions exported
-            from wasm, changing its internal state and re-rendering the HTML. Click
+            initial HTML on the server, then the same wasm module is loaded by
+            your browser where event listeners are attached, which call
+            functions exported from wasm, changing its internal state and
+            re-rendering the HTML. Click
             <strong>Increment</strong> to see!
           </p>
           <div class="border-2 mt-4 pb-3 text-white">
@@ -131,9 +139,9 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
             Below is the initial HTML rendered by the server. The outer <code
               >{"<wasm-html>"}</code
             >
-            <strong>custom element</strong> is run in the browser, loading the wasm
-            URL at <code>src</code>. The inner HTML is the output of running the
-            wasm module on the server, providing the initial HTML.
+            <strong>custom element</strong> is run in the browser, loading the
+            wasm URL at <code>src</code>. The inner HTML is the output of
+            running the wasm module on the server, providing the initial HTML.
           </p>
           <Code
             code={`<wasm-html src="/collected-public/wasm/a8e931832cc7dce187d7234237f6cfef13e9fa523ab4101d3cec7bfb66e905c1">\n` +
@@ -142,11 +150,11 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
             lang="html"
           />
           <p>
-            <strong>Event delegation</strong> is used to automatically wire up the
-            button’s click to call the <code>exports.increment()</code> function
-            exported from WebAssembly. How does it know which exported function to
-            call? See the <code>data-action="increment"</code>? That declares
-            the exported function’s name to find.
+            <strong>Event delegation</strong> is used to automatically wire up
+            the button’s click to call the <code>exports.increment()</code>
+             function exported from WebAssembly. How does it know which exported
+            function to call? See the <code>data-action="increment"</code>? That
+            declares the exported function’s name to find.
           </p>
           <p>
             So we have a single WebAssembly module, running in two places
@@ -216,8 +224,7 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
         <wasm-html
           src="/collected-public/wasm/a6e388fd5d780de90144044066d2eeb889c1f930c85b1fff0a6b530fad391f20"
           globals={JSON.stringify(initialSVGGlobals)}
-          class="flex justify-center"
-          ></wasm-html>
+          class="flex justify-center"></wasm-html>
         <legend class="mt-1 mb-1 font-medium text-center mx-auto"
           >Your color choice rendered in the browser</legend
         >
@@ -257,34 +264,43 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
           Rendering HTML on the edge and in the browser. It starts from an
           object store (like S3 or GCP Storage) holding an example <code
             >abc.wasm</code
-          > file, loaded by the edge server which renders the initial HTML sent to
-          the user’s browser, which then loads an instance of the same <code
+          > file, loaded by the edge server which renders the initial HTML sent
+          to the user’s browser, which then loads an instance of the same <code
             >abc.wasm</code
           >, and adds event handlers which are forwarded to the wasm instance,
           re-rendering the HTML.
         </figcaption>
       </figure>
 
-      <hr>
+      <hr />
 
       <h2>What else can you create with WebAssembly?</h2>
       <ul>
         <li>State machines that run in any major programming language.</li>
-        <li>HTML Components that run in the browser, on the server, and on the edge.</li>
+        <li>
+          HTML Components that run in the browser, on the server, and on the
+          edge.
+        </li>
         <li>Parsers and formatters that run <em>really</em> fast.</li>
-        <li>Localized text that is code split and efficiently downloaded on-demand.</li>
+        <li>
+          Localized text that is code split and efficiently downloaded
+          on-demand.
+        </li>
         <li>Sandboxed user-generated code.</li>
-        <li>Don’t just settle for inert JSON — how about Turing-complete payloads served from a HTTP API?</li>
+        <li>
+          Don’t just settle for inert JSON — how about Turing-complete payloads
+          served from a HTTP API?
+        </li>
         <li>Maybe even minature apps store as TXT records on your domain.</li>
       </ul>
 
-      <hr>
+      <hr />
 
       <p>
         This site you fine viewer are looking at is authored using <a
           href="https://astro.build">Astro</a
         > in server mode, uses <a href="https://deno.com/deploy">Deno Deploy</a>
-        for edge hosting, <a href="https://cloud.google.com/storage"
+         for edge hosting, <a href="https://cloud.google.com/storage"
           >Google Cloud Storage</a
         > to store .wasm files, and <a
           href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements"
@@ -301,7 +317,7 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
       <nav>
         <PrimaryNavList />
       </nav>
-      <hr>
+      <hr />
       <p>© 2023 Royal Icing Pty Ltd</p>
       <p>
         <a href="https://github.com/cool-calm/calculated-world"

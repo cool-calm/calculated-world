@@ -1,0 +1,40 @@
+---
+import { getHighlighter } from "shikiji";
+
+interface Props {
+  code: string;
+  lang: string;
+  wrap?: boolean;
+}
+
+const shiki = await getHighlighter({
+  themes: ["nord", "vitesse-light", "github-dark"],
+  langs: ["javascript", "html"],
+});
+
+const html = shiki.codeToHtml(Astro.props.code, {
+  lang: Astro.props.lang,
+  theme: "github-dark",
+  //   transforms: {
+  //     pre(node) {
+  //       if (inline) {
+  //         node.tagName = "code";
+  //       }
+  //       const classValue = node.properties.class ?? "";
+  //       const styleValue = node.properties.style ?? "";
+  //       node.properties.class = classValue.replace(/shiki/g, "astro-code");
+  //       if (wrap === false) {
+  //         node.properties.style = styleValue + "; overflow-x: auto;";
+  //       } else if (wrap === true) {
+  //         node.properties.style =
+  //           styleValue +
+  //           "; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;";
+  //       }
+  //     },
+  //   },
+});
+---
+
+<div style="white-space: pre-wrap; word-wrap: break-word;">
+  <Fragment set:html={html} />
+</div>
