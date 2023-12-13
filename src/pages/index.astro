@@ -40,6 +40,12 @@ const initialSVGGlobals = { color_hex: 0x9f28edff };
     <meta name="generator" content={Astro.generator} />
 
     <script src="../custom-elements/wasm-html.js"></script>
+
+    <style is:global>
+      pre.shiki {
+        white-space: pre-wrap;
+      }
+    </style>
   </head>
   <body>
     <main class="prose lg:prose-xl max-w-2xl mx-auto px-3 pt-16 pb-16">
