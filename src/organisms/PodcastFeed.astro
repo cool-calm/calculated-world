@@ -1,5 +1,7 @@
 ---
+import Code from "../components/Code.astro";
 import { MemoryIO } from "../custom-elements/MemoryIO.js";
+
 const wasmURL = new URL("/podcast_feed_xml_OPT.wasm", Astro.url.origin);
 const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmURL), {
   datasource: {
@@ -27,30 +29,44 @@ function writeStringAt(string, writePtr) {
   return getMemory().writeStringAt(string, writePtr);
 }
 
-const xml = getMemory().readString(instance.exports.text_xml());
+const memoryIO = getMemory();
+(instance.exports.title as WebAssembly.Global).value = memoryIO.writeString(
+  "This podcast is rendered using WebAssembly on the server"
+)[0];
+(instance.exports.description as WebAssembly.Global).value =
+  memoryIO.writeString(
+    "The exact same WebAssembly runs on the server and in the browser."
+  )[0];
+
+const xml = memoryIO.readString(instance.exports.text_xml());
 ---
 
-<h2>Rendered on the server:</h2>
-<pre>{xml}</pre>
+<details class="mb-8">
+  <summary class="font-bold cursor-pointer">Rendered on the server:</summary>
+  <Code lang="xml" code={xml} />
+</details>
 
-<form id="podcast-feed-form" class="flex flex-col">
-  <label>
-    Number of episodes:
-    <input type="number" name="episodes_count" min="0" value="3" />
-  </label>
-  <label>
-    Title:
-    <input name="title" />
-  </label>
-  <label>
-    Description:
-    <input name="description" />
-  </label>
-  <fieldset></fieldset>
-  <output>
-    <pre><code /></pre>
-  </output>
-</form>
+<details class="mb-8" open>
+  <summary class="font-bold cursor-pointer">Rendered in browser:</summary>
+  <form id="podcast-feed-form" class="flex flex-col">
+    <label>
+      Number of episodes:
+      <input type="number" name="episodes_count" min="0" value="3" />
+    </label>
+    <label>
+      Title:
+      <input name="title" value="My podcast" />
+    </label>
+    <label>
+      Description:
+      <input name="description" value="A history of the forklift" />
+    </label>
+    <fieldset></fieldset>
+    <output>
+      <shiki-code data-lang="xml" data-code=""></shiki-code>
+    </output>
+  </form>
+</details>
 
 <script>
   console.log("1");
@@ -73,7 +89,7 @@ const xml = getMemory().readString(instance.exports.text_xml());
       }
 
       get_episodes_count() {
-        return parseInt(this.formData.get("episodes_count") as string);
+        return parseInt(this.formData.get("episodes_count") as string) || 0;
       }
 
       get_episode_pub_date_utc() {
@@ -109,36 +125,39 @@ const xml = getMemory().readString(instance.exports.text_xml());
         .map((name) => [name, formDatasource[name].bind(formDatasource)])
     );
 
-    const { module, instance } = await WebAssembly.instantiateStreaming(
-      fetch(wasmURL),
-      { datasource }
-    );
+    const module = await WebAssembly.compileStreaming(fetch(wasmURL));
 
     console.time("new wasm instance");
-    new WebAssembly.Instance(module, { datasource });
+    let instance = freshInstance();
     console.timeEnd("new wasm instance");
     console.time("new memory io");
     getMemory();
     console.timeEnd("new memory io");
 
+    function freshInstance() {
+      return new WebAssembly.Instance(module, { datasource });
+    }
+
     function getMemory() {
       return new MemoryIO(instance.exports);
     }
-    function writeStringAt(string, writePtr) {
+    function writeStringAt(string: string, writePtr: number) {
       return getMemory().writeStringAt(string, writePtr);
     }
 
-    const outputCodeEl = form.querySelector("output code")!;
+    const outputCodeEl = form.querySelector("output shiki-code") as HTMLElement;
 
     function update() {
-      if (typeof instance.exports.free_all !== "function") return;
+      console.time("Instantiate new wasm instance");
+      instance = freshInstance();
+      console.timeEnd("Instantiate new wasm instance");
+
       if (typeof instance.exports.text_xml !== "function") return;
       if (false === instance.exports.title instanceof WebAssembly.Global)
         return;
       if (false === instance.exports.description instanceof WebAssembly.Global)
         return;
 
-      instance.exports.free_all();
       const memoryIO = getMemory();
       const formData = new FormData(form);
 
@@ -150,15 +169,13 @@ const xml = getMemory().readString(instance.exports.text_xml());
         formData.get("description")
       )[0];
 
-      console.time("Nothing");
-      console.timeEnd("Nothing");
-      console.time("Render XML");
-      console.time("Render XML bytes");
+      console.time("Generate XML");
       const ptr = instance.exports.text_xml();
-      console.timeEnd("Render XML bytes");
       const xml = memoryIO.readString(ptr);
-      console.timeEnd("Render XML");
-      outputCodeEl.textContent = xml;
+      console.timeEnd("Generate XML");
+      setTimeout(() => {
+        outputCodeEl.dataset.code = xml;
+      }, 20);
     }
 
     requestAnimationFrame(update);

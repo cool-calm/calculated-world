@@ -7,6 +7,10 @@ export class MemoryIO {
         this.alloc = exports.alloc;
     }
 
+    zeroEverything() {
+        this.memoryBytes.fill(0);
+    }
+
     readString(ptr) {
         const { memoryBytes } = this;
 

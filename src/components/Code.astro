@@ -9,7 +9,7 @@ interface Props {
 
 const shiki = await getHighlighter({
   themes: ["nord", "vitesse-light", "github-dark"],
-  langs: ["javascript", "html"],
+  langs: ["html", "xml", "json", "csv", "css", "javascript", "typescript"],
 });
 
 const html = shiki.codeToHtml(Astro.props.code, {
