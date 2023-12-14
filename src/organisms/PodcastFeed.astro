@@ -39,35 +39,32 @@ import Code from "../components/Code.astro";
 //   )[0];
 
 // const xml = memoryIO.readString(instance.exports.text_xml());
-const xml = "";
 ---
 
-<details class="mb-8">
+<!-- <details class="mb-8">
   <summary class="font-bold cursor-pointer">Rendered on the server:</summary>
   <Code lang="xml" code={xml} />
-</details>
-
-<details class="mb-8" open>
-  <summary class="font-bold cursor-pointer">Rendered in browser:</summary>
-  <form id="podcast-feed-form" class="flex flex-col">
-    <label>
-      Number of episodes:
-      <input type="number" name="episodes_count" min="0" value="3" />
-    </label>
-    <label>
-      Title:
-      <input name="title" value="My podcast" />
-    </label>
-    <label>
-      Description:
-      <input name="description" value="A history of the forklift" />
-    </label>
-    <fieldset></fieldset>
-    <output>
-      <shiki-code data-lang="xml" data-code=""></shiki-code>
-    </output>
-  </form>
-</details>
+</details> --><!-- <details class="mb-8" open>
+  <summary class="font-bold cursor-pointer">Rendered in browser:</summary> -->
+<form id="podcast-feed-form" class="flex flex-col">
+  <label>
+    Number of episodes:
+    <input type="number" name="episodes_count" min="0" value="3" />
+  </label>
+  <label>
+    Title:
+    <input name="title" value="My podcast" />
+  </label>
+  <label>
+    Description:
+    <input name="description" value="A history of the forklift" />
+  </label>
+  <fieldset></fieldset>
+  <output>
+    <shiki-code data-lang="xml" data-code=""></shiki-code>
+  </output>
+</form>
+<!-- </details> -->
 
 <script>
   console.log("1");
