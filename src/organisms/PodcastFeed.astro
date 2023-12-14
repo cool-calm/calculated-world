@@ -1,0 +1,167 @@
+---
+import { MemoryIO } from "../custom-elements/MemoryIO.js";
+const wasmURL = new URL("/podcast_feed_xml_OPT.wasm", Astro.url.origin);
+const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmURL), {
+  datasource: {
+    get_episodes_count: () => 2,
+    get_episode_pub_date_utc: () => 0,
+    get_episode_duration_seconds: () => 0,
+    write_episode_id: (episodeID, writePtr) => {},
+    write_episode_title: (episodeID, writePtr) => {
+      return writeStringAt(`Episode ${episodeID + 1}`, writePtr);
+    },
+    write_episode_description: (episodeID, writePtr) => {
+      return writeStringAt(`My description for ${episodeID + 1}`, writePtr);
+    },
+    write_episode_link_url: (episodeID, writePtr) => {},
+    write_episode_mp3_url: (episodeID, writePtr) => {},
+    get_episode_mp3_byte_count: (episodeID, writePtr) => {},
+    write_episode_content_html: (episodeID, writePtr) => {},
+  },
+});
+
+function getMemory() {
+  return new MemoryIO(instance.exports);
+}
+function writeStringAt(string, writePtr) {
+  return getMemory().writeStringAt(string, writePtr);
+}
+
+const xml = getMemory().readString(instance.exports.text_xml());
+---
+
+<h2>Rendered on the server:</h2>
+<pre>{xml}</pre>
+
+<form id="podcast-feed-form" class="flex flex-col">
+  <label>
+    Number of episodes:
+    <input type="number" name="episodes_count" min="0" value="3" />
+  </label>
+  <label>
+    Title:
+    <input name="title" />
+  </label>
+  <label>
+    Description:
+    <input name="description" />
+  </label>
+  <fieldset></fieldset>
+  <output>
+    <pre><code /></pre>
+  </output>
+</form>
+
+<script>
+  console.log("1");
+  import { MemoryIO } from "../custom-elements/MemoryIO.js";
+  console.log("2");
+  const wasmURL = new URL("/podcast_feed_xml_OPT.wasm", window.location.origin);
+  console.log(wasmURL);
+  init();
+
+  async function init() {
+    class FormDatasource {
+      form: HTMLFormElement;
+
+      constructor(form: HTMLFormElement) {
+        this.form = form;
+      }
+
+      get formData() {
+        return new FormData(this.form);
+      }
+
+      get_episodes_count() {
+        return parseInt(this.formData.get("episodes_count") as string);
+      }
+
+      get_episode_pub_date_utc() {
+        return 0;
+      }
+      get_episode_duration_seconds() {
+        return 0;
+      }
+      write_episode_id(episodeID, writePtr) {}
+      write_episode_title(episodeID, writePtr) {
+        return writeStringAt(`Episode ${episodeID + 1}`, writePtr);
+      }
+      write_episode_description(episodeID, writePtr) {
+        return writeStringAt(`My description for ${episodeID + 1}`, writePtr);
+      }
+      write_episode_link_url(episodeID, writePtr) {}
+      write_episode_mp3_url(episodeID, writePtr) {}
+      get_episode_mp3_byte_count(episodeID, writePtr) {}
+      write_episode_content_html(episodeID, writePtr) {}
+    }
+
+    const form = document.getElementById(
+      "podcast-feed-form"
+    ) as HTMLFormElement;
+    const formDatasource = new FormDatasource(form);
+    const datasource = Object.fromEntries(
+      Object.getOwnPropertyNames(FormDatasource.prototype)
+        .filter(
+          (name) =>
+            name !== "constructor" &&
+            typeof FormDatasource.prototype[name] === "function"
+        )
+        .map((name) => [name, formDatasource[name].bind(formDatasource)])
+    );
+
+    const { module, instance } = await WebAssembly.instantiateStreaming(
+      fetch(wasmURL),
+      { datasource }
+    );
+
+    console.time("new wasm instance");
+    new WebAssembly.Instance(module, { datasource });
+    console.timeEnd("new wasm instance");
+    console.time("new memory io");
+    getMemory();
+    console.timeEnd("new memory io");
+
+    function getMemory() {
+      return new MemoryIO(instance.exports);
+    }
+    function writeStringAt(string, writePtr) {
+      return getMemory().writeStringAt(string, writePtr);
+    }
+
+    const outputCodeEl = form.querySelector("output code")!;
+
+    function update() {
+      if (typeof instance.exports.free_all !== "function") return;
+      if (typeof instance.exports.text_xml !== "function") return;
+      if (false === instance.exports.title instanceof WebAssembly.Global)
+        return;
+      if (false === instance.exports.description instanceof WebAssembly.Global)
+        return;
+
+      instance.exports.free_all();
+      const memoryIO = getMemory();
+      const formData = new FormData(form);
+
+      instance.exports.title.value = memoryIO.writeString(
+        formData.get("title")
+      )[0];
+
+      instance.exports.description.value = memoryIO.writeString(
+        formData.get("description")
+      )[0];
+
+      console.time("Nothing");
+      console.timeEnd("Nothing");
+      console.time("Render XML");
+      console.time("Render XML bytes");
+      const ptr = instance.exports.text_xml();
+      console.timeEnd("Render XML bytes");
+      const xml = memoryIO.readString(ptr);
+      console.timeEnd("Render XML");
+      outputCodeEl.textContent = xml;
+    }
+
+    requestAnimationFrame(update);
+    form.addEventListener("input", update);
+  }
+</script>
