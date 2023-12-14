@@ -1,44 +1,45 @@
 ---
 import Code from "../components/Code.astro";
-import { MemoryIO } from "../custom-elements/MemoryIO.js";
+// import { MemoryIO } from "../custom-elements/MemoryIO.js";
 
-const wasmURL = new URL("/podcast_feed_xml_OPT.wasm", Astro.url.origin);
-const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmURL), {
-  datasource: {
-    get_episodes_count: () => 2,
-    get_episode_pub_date_utc: () => 0,
-    get_episode_duration_seconds: () => 0,
-    write_episode_id: (episodeID, writePtr) => {},
-    write_episode_title: (episodeID, writePtr) => {
-      return writeStringAt(`Episode ${episodeID + 1}`, writePtr);
-    },
-    write_episode_description: (episodeID, writePtr) => {
-      return writeStringAt(`My description for ${episodeID + 1}`, writePtr);
-    },
-    write_episode_link_url: (episodeID, writePtr) => {},
-    write_episode_mp3_url: (episodeID, writePtr) => {},
-    get_episode_mp3_byte_count: (episodeID, writePtr) => {},
-    write_episode_content_html: (episodeID, writePtr) => {},
-  },
-});
+// const wasmURL = new URL("/podcast_feed_xml_OPT.wasm", Astro.url.origin);
+// const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmURL), {
+//   datasource: {
+//     get_episodes_count: () => 2,
+//     get_episode_pub_date_utc: () => 0,
+//     get_episode_duration_seconds: () => 0,
+//     write_episode_id: (episodeID, writePtr) => {},
+//     write_episode_title: (episodeID, writePtr) => {
+//       return writeStringAt(`Episode ${episodeID + 1}`, writePtr);
+//     },
+//     write_episode_description: (episodeID, writePtr) => {
+//       return writeStringAt(`My description for ${episodeID + 1}`, writePtr);
+//     },
+//     write_episode_link_url: (episodeID, writePtr) => {},
+//     write_episode_mp3_url: (episodeID, writePtr) => {},
+//     get_episode_mp3_byte_count: (episodeID, writePtr) => {},
+//     write_episode_content_html: (episodeID, writePtr) => {},
+//   },
+// });
 
-function getMemory() {
-  return new MemoryIO(instance.exports);
-}
-function writeStringAt(string, writePtr) {
-  return getMemory().writeStringAt(string, writePtr);
-}
+// function getMemory() {
+//   return new MemoryIO(instance.exports);
+// }
+// function writeStringAt(string, writePtr) {
+//   return getMemory().writeStringAt(string, writePtr);
+// }
 
-const memoryIO = getMemory();
-(instance.exports.title as WebAssembly.Global).value = memoryIO.writeString(
-  "This podcast is rendered using WebAssembly on the server"
-)[0];
-(instance.exports.description as WebAssembly.Global).value =
-  memoryIO.writeString(
-    "The exact same WebAssembly runs on the server and in the browser."
-  )[0];
+// const memoryIO = getMemory();
+// (instance.exports.title as WebAssembly.Global).value = memoryIO.writeString(
+//   "This podcast is rendered using WebAssembly on the server"
+// )[0];
+// (instance.exports.description as WebAssembly.Global).value =
+//   memoryIO.writeString(
+//     "The exact same WebAssembly runs on the server and in the browser."
+//   )[0];
 
-const xml = memoryIO.readString(instance.exports.text_xml());
+// const xml = memoryIO.readString(instance.exports.text_xml());
+const xml = "";
 ---
 
 <details class="mb-8">
